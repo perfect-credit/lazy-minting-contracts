@@ -1130,12 +1130,39 @@ contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
   /// @notice Verifies the signature for a given NFTVoucher, returning the address of the signer.
   /// @dev Will revert if the signature is invalid. Does not verify that the signer is authorized to mint NFTs.
   /// @param voucher An NFTVoucher describing an unminted NFT.
-  function _verify(NFTVoucher calldata voucher) internal view returns (address) {
+  function _verify(NFTVoucher calldata voucher) public  view returns (address) {
     bytes32 digest = _hash(voucher);
     return ECDSA.recover(digest, voucher.signature);
   }
 
   function supportsInterface(bytes4 interfaceId) public view virtual override (AccessControl, ERC721URIStorage) returns (bool) {
     return ERC721.supportsInterface(interfaceId) || AccessControl.supportsInterface(interfaceId);
+  }
+  struct list {
+    uint256 price;
+    address seller;
+    bool listed;
+  }
+  mapping(uint256 => list) listed;
+
+  function listNFT(uint256 tokenId,uint256 price) public returns (bool){
+    require(ownerOf(tokenId) == msg.sender,"You are not owner of this tokenId");
+    transferFrom(msg.sender,address(this),tokenId);
+    listed[tokenId] = list(price,msg.sender,true);
+    return true;
+  }
+  function buyNFT (uint256 tokenId) public payable returns (bool){
+    require(listed[tokenId].listed == true,"NFT not available to buy" );
+    require(msg.value == listed[tokenId].price,"invalid price" );
+    require(msg.sender != listed[tokenId].seller,"seller cannot buy" );
+    safeTransferFrom(address(this),msg.sender,tokenId);
+    listed[tokenId].listed = false;
+    return true;
+  }
+  function deListNFT(uint256 tokenId) public returns (bool){
+    require(msg.sender == listed[tokenId].seller,"invalid seller" );
+    safeTransferFrom(address(this),msg.sender,tokenId);
+    listed[tokenId].listed = false;
+    return true;
   }
 }
