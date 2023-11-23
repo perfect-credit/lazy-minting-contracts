@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.0;
+pragma solidity 0.8.20;
 pragma abicoder v2; // required to accept structs as function parameters
 abstract contract Context {
     function _msgSender() internal view virtual returns (address) {
