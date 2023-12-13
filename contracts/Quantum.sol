@@ -1,22 +1,29 @@
-//SPDX-License-Identifier: Unlicense
+//SPDX-License-Identifier: MIT
 pragma solidity 0.8.20;
 pragma abicoder v2; // required to accept structs as function parameters
+
 abstract contract Context {
     function _msgSender() internal view virtual returns (address) {
         return msg.sender;
     }
+
     function _msgData() internal view virtual returns (bytes calldata) {
         return msg.data;
     }
 }
+
 interface IERC165 {
     function supportsInterface(bytes4 interfaceId) external view returns (bool);
 }
+
 abstract contract ERC165 is IERC165 {
-    function supportsInterface(bytes4 interfaceId) public view virtual returns (bool) {
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual returns (bool) {
         return interfaceId == type(IERC165).interfaceId;
     }
 }
+
 library Math {
     error MathOverflowedMulDiv();
     enum Rounding {
@@ -25,20 +32,32 @@ library Math {
         Trunc, // Toward zero
         Expand // Away from zero
     }
-    function tryAdd(uint256 a, uint256 b) internal pure returns (bool, uint256) {
+
+    function tryAdd(
+        uint256 a,
+        uint256 b
+    ) internal pure returns (bool, uint256) {
         unchecked {
             uint256 c = a + b;
             if (c < a) return (false, 0);
             return (true, c);
         }
     }
-    function trySub(uint256 a, uint256 b) internal pure returns (bool, uint256) {
+
+    function trySub(
+        uint256 a,
+        uint256 b
+    ) internal pure returns (bool, uint256) {
         unchecked {
             if (b > a) return (false, 0);
             return (true, a - b);
         }
     }
-    function tryMul(uint256 a, uint256 b) internal pure returns (bool, uint256) {
+
+    function tryMul(
+        uint256 a,
+        uint256 b
+    ) internal pure returns (bool, uint256) {
         unchecked {
             if (a == 0) return (true, 0);
             uint256 c = a * b;
@@ -46,28 +65,40 @@ library Math {
             return (true, c);
         }
     }
-    function tryDiv(uint256 a, uint256 b) internal pure returns (bool, uint256) {
+
+    function tryDiv(
+        uint256 a,
+        uint256 b
+    ) internal pure returns (bool, uint256) {
         unchecked {
             if (b == 0) return (false, 0);
             return (true, a / b);
         }
     }
-    function tryMod(uint256 a, uint256 b) internal pure returns (bool, uint256) {
+
+    function tryMod(
+        uint256 a,
+        uint256 b
+    ) internal pure returns (bool, uint256) {
         unchecked {
             if (b == 0) return (false, 0);
             return (true, a % b);
         }
     }
+
     function max(uint256 a, uint256 b) internal pure returns (uint256) {
         return a > b ? a : b;
     }
+
     function min(uint256 a, uint256 b) internal pure returns (uint256) {
         return a < b ? a : b;
     }
+
     function average(uint256 a, uint256 b) internal pure returns (uint256) {
         // (a + b) / 2 can overflow.
         return (a & b) + (a ^ b) / 2;
     }
+
     function ceilDiv(uint256 a, uint256 b) internal pure returns (uint256) {
         if (b == 0) {
             // Guarantee the same behavior as in a regular Solidity division.
@@ -77,7 +108,12 @@ library Math {
         // (a + b - 1) / b can overflow on addition, so we distribute.
         return a == 0 ? 0 : (a - 1) / b + 1;
     }
-    function mulDiv(uint256 x, uint256 y, uint256 denominator) internal pure returns (uint256 result) {
+
+    function mulDiv(
+        uint256 x,
+        uint256 y,
+        uint256 denominator
+    ) internal pure returns (uint256 result) {
         unchecked {
             uint256 prod0 = x * y; // Least significant 256 bits of the product
             uint256 prod1; // Most significant 256 bits of the product
@@ -132,13 +168,20 @@ library Math {
             return result;
         }
     }
-    function mulDiv(uint256 x, uint256 y, uint256 denominator, Rounding rounding) internal pure returns (uint256) {
+
+    function mulDiv(
+        uint256 x,
+        uint256 y,
+        uint256 denominator,
+        Rounding rounding
+    ) internal pure returns (uint256) {
         uint256 result = mulDiv(x, y, denominator);
         if (unsignedRoundsUp(rounding) && mulmod(x, y, denominator) > 0) {
             result += 1;
         }
         return result;
     }
+
     function sqrt(uint256 a) internal pure returns (uint256) {
         if (a == 0) {
             return 0;
@@ -155,12 +198,19 @@ library Math {
             return min(result, a / result);
         }
     }
-    function sqrt(uint256 a, Rounding rounding) internal pure returns (uint256) {
+
+    function sqrt(
+        uint256 a,
+        Rounding rounding
+    ) internal pure returns (uint256) {
         unchecked {
             uint256 result = sqrt(a);
-            return result + (unsignedRoundsUp(rounding) && result * result < a ? 1 : 0);
+            return
+                result +
+                (unsignedRoundsUp(rounding) && result * result < a ? 1 : 0);
         }
     }
+
     function log2(uint256 value) internal pure returns (uint256) {
         uint256 result = 0;
         unchecked {
@@ -198,12 +248,19 @@ library Math {
         }
         return result;
     }
-    function log2(uint256 value, Rounding rounding) internal pure returns (uint256) {
+
+    function log2(
+        uint256 value,
+        Rounding rounding
+    ) internal pure returns (uint256) {
         unchecked {
             uint256 result = log2(value);
-            return result + (unsignedRoundsUp(rounding) && 1 << result < value ? 1 : 0);
+            return
+                result +
+                (unsignedRoundsUp(rounding) && 1 << result < value ? 1 : 0);
         }
     }
+
     function log10(uint256 value) internal pure returns (uint256) {
         uint256 result = 0;
         unchecked {
@@ -237,12 +294,19 @@ library Math {
         }
         return result;
     }
-    function log10(uint256 value, Rounding rounding) internal pure returns (uint256) {
+
+    function log10(
+        uint256 value,
+        Rounding rounding
+    ) internal pure returns (uint256) {
         unchecked {
             uint256 result = log10(value);
-            return result + (unsignedRoundsUp(rounding) && 10 ** result < value ? 1 : 0);
+            return
+                result +
+                (unsignedRoundsUp(rounding) && 10 ** result < value ? 1 : 0);
         }
     }
+
     function log256(uint256 value) internal pure returns (uint256) {
         uint256 result = 0;
         unchecked {
@@ -268,28 +332,43 @@ library Math {
         }
         return result;
     }
-    function log256(uint256 value, Rounding rounding) internal pure returns (uint256) {
+
+    function log256(
+        uint256 value,
+        Rounding rounding
+    ) internal pure returns (uint256) {
         unchecked {
             uint256 result = log256(value);
-            return result + (unsignedRoundsUp(rounding) && 1 << (result << 3) < value ? 1 : 0);
+            return
+                result +
+                (
+                    unsignedRoundsUp(rounding) && 1 << (result << 3) < value
+                        ? 1
+                        : 0
+                );
         }
     }
+
     function unsignedRoundsUp(Rounding rounding) internal pure returns (bool) {
         return uint8(rounding) % 2 == 1;
     }
 }
+
 library SignedMath {
     function max(int256 a, int256 b) internal pure returns (int256) {
         return a > b ? a : b;
     }
+
     function min(int256 a, int256 b) internal pure returns (int256) {
         return a < b ? a : b;
     }
+
     function average(int256 a, int256 b) internal pure returns (int256) {
         // Formula from the book "Hacker's Delight"
         int256 x = (a & b) + ((a ^ b) >> 1);
         return x + (int256(uint256(x) >> 255) & (a ^ b));
     }
+
     function abs(int256 n) internal pure returns (uint256) {
         unchecked {
             // must be unchecked in order to support `n = type(int256).min`
@@ -297,10 +376,12 @@ library SignedMath {
         }
     }
 }
+
 library Strings {
     bytes16 private constant HEX_DIGITS = "0123456789abcdef";
     uint8 private constant ADDRESS_LENGTH = 20;
     error StringsInsufficientHexLength(uint256 value, uint256 length);
+
     function toString(uint256 value) internal pure returns (string memory) {
         unchecked {
             uint256 length = Math.log10(value) + 1;
@@ -322,15 +403,27 @@ library Strings {
             return buffer;
         }
     }
-    function toStringSigned(int256 value) internal pure returns (string memory) {
-        return string.concat(value < 0 ? "-" : "", toString(SignedMath.abs(value)));
+
+    function toStringSigned(
+        int256 value
+    ) internal pure returns (string memory) {
+        return
+            string.concat(
+                value < 0 ? "-" : "",
+                toString(SignedMath.abs(value))
+            );
     }
+
     function toHexString(uint256 value) internal pure returns (string memory) {
         unchecked {
             return toHexString(value, Math.log256(value) + 1);
         }
     }
-    function toHexString(uint256 value, uint256 length) internal pure returns (string memory) {
+
+    function toHexString(
+        uint256 value,
+        uint256 length
+    ) internal pure returns (string memory) {
         uint256 localValue = value;
         bytes memory buffer = new bytes(2 * length + 2);
         buffer[0] = "0";
@@ -344,25 +437,54 @@ library Strings {
         }
         return string(buffer);
     }
+
     function toHexString(address addr) internal pure returns (string memory) {
         return toHexString(uint256(uint160(addr)), ADDRESS_LENGTH);
     }
-    function equal(string memory a, string memory b) internal pure returns (bool) {
-        return bytes(a).length == bytes(b).length && keccak256(bytes(a)) == keccak256(bytes(b));
+
+    function equal(
+        string memory a,
+        string memory b
+    ) internal pure returns (bool) {
+        return
+            bytes(a).length == bytes(b).length &&
+            keccak256(bytes(a)) == keccak256(bytes(b));
     }
 }
+
 interface IAccessControl {
     error AccessControlUnauthorizedAccount(address account, bytes32 neededRole);
     error AccessControlBadConfirmation();
-    event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole);
-    event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender);
-    event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender);
-    function hasRole(bytes32 role, address account) external view returns (bool);
+    event RoleAdminChanged(
+        bytes32 indexed role,
+        bytes32 indexed previousAdminRole,
+        bytes32 indexed newAdminRole
+    );
+    event RoleGranted(
+        bytes32 indexed role,
+        address indexed account,
+        address indexed sender
+    );
+    event RoleRevoked(
+        bytes32 indexed role,
+        address indexed account,
+        address indexed sender
+    );
+
+    function hasRole(
+        bytes32 role,
+        address account
+    ) external view returns (bool);
+
     function getRoleAdmin(bytes32 role) external view returns (bytes32);
+
     function grantRole(bytes32 role, address account) external;
+
     function revokeRole(bytes32 role, address account) external;
+
     function renounceRole(bytes32 role, address callerConfirmation) external;
 }
+
 abstract contract AccessControl is Context, IAccessControl, ERC165 {
     struct RoleData {
         mapping(address account => bool) hasRole;
@@ -374,42 +496,71 @@ abstract contract AccessControl is Context, IAccessControl, ERC165 {
         _checkRole(role);
         _;
     }
-    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
-        return interfaceId == type(IAccessControl).interfaceId || super.supportsInterface(interfaceId);
+
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override returns (bool) {
+        return
+            interfaceId == type(IAccessControl).interfaceId ||
+            super.supportsInterface(interfaceId);
     }
-    function hasRole(bytes32 role, address account) public view virtual returns (bool) {
+
+    function hasRole(
+        bytes32 role,
+        address account
+    ) public view virtual returns (bool) {
         return _roles[role].hasRole[account];
     }
+
     function _checkRole(bytes32 role) internal view virtual {
         _checkRole(role, _msgSender());
     }
+
     function _checkRole(bytes32 role, address account) internal view virtual {
         if (!hasRole(role, account)) {
             revert AccessControlUnauthorizedAccount(account, role);
         }
     }
+
     function getRoleAdmin(bytes32 role) public view virtual returns (bytes32) {
         return _roles[role].adminRole;
     }
-    function grantRole(bytes32 role, address account) public virtual onlyRole(getRoleAdmin(role)) {
+
+    function grantRole(
+        bytes32 role,
+        address account
+    ) public virtual onlyRole(getRoleAdmin(role)) {
         _grantRole(role, account);
     }
-    function revokeRole(bytes32 role, address account) public virtual onlyRole(getRoleAdmin(role)) {
+
+    function revokeRole(
+        bytes32 role,
+        address account
+    ) public virtual onlyRole(getRoleAdmin(role)) {
         _revokeRole(role, account);
     }
-    function renounceRole(bytes32 role, address callerConfirmation) public virtual {
+
+    function renounceRole(
+        bytes32 role,
+        address callerConfirmation
+    ) public virtual {
         if (callerConfirmation != _msgSender()) {
             revert AccessControlBadConfirmation();
         }
 
         _revokeRole(role, callerConfirmation);
     }
+
     function _setRoleAdmin(bytes32 role, bytes32 adminRole) internal virtual {
         bytes32 previousAdminRole = getRoleAdmin(role);
         _roles[role].adminRole = adminRole;
         emit RoleAdminChanged(role, previousAdminRole, adminRole);
     }
-    function _grantRole(bytes32 role, address account) internal virtual returns (bool) {
+
+    function _grantRole(
+        bytes32 role,
+        address account
+    ) internal virtual returns (bool) {
         if (!hasRole(role, account)) {
             _roles[role].hasRole[account] = true;
             emit RoleGranted(role, account, _msgSender());
@@ -418,7 +569,11 @@ abstract contract AccessControl is Context, IAccessControl, ERC165 {
             return false;
         }
     }
-    function _revokeRole(bytes32 role, address account) internal virtual returns (bool) {
+
+    function _revokeRole(
+        bytes32 role,
+        address account
+    ) internal virtual returns (bool) {
         if (hasRole(role, account)) {
             _roles[role].hasRole[account] = false;
             emit RoleRevoked(role, account, _msgSender());
@@ -428,6 +583,7 @@ abstract contract AccessControl is Context, IAccessControl, ERC165 {
         }
     }
 }
+
 interface IERC721Errors {
     error ERC721InvalidOwner(address owner);
     error ERC721NonexistentToken(uint256 tokenId);
@@ -438,6 +594,7 @@ interface IERC721Errors {
     error ERC721InvalidApprover(address approver);
     error ERC721InvalidOperator(address operator);
 }
+
 interface IERC721Receiver {
     function onERC721Received(
         address operator,
@@ -446,26 +603,72 @@ interface IERC721Receiver {
         bytes calldata data
     ) external returns (bytes4);
 }
+
 interface IERC721 is IERC165 {
-    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
-    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
-    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
+    event Transfer(
+        address indexed from,
+        address indexed to,
+        uint256 indexed tokenId
+    );
+    event Approval(
+        address indexed owner,
+        address indexed approved,
+        uint256 indexed tokenId
+    );
+    event ApprovalForAll(
+        address indexed owner,
+        address indexed operator,
+        bool approved
+    );
+
     function balanceOf(address owner) external view returns (uint256 balance);
+
     function ownerOf(uint256 tokenId) external view returns (address owner);
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) external;
-    function safeTransferFrom(address from, address to, uint256 tokenId) external;
+
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId,
+        bytes calldata data
+    ) external;
+
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) external;
+
     function transferFrom(address from, address to, uint256 tokenId) external;
+
     function approve(address to, uint256 tokenId) external;
+
     function setApprovalForAll(address operator, bool approved) external;
-    function getApproved(uint256 tokenId) external view returns (address operator);
-    function isApprovedForAll(address owner, address operator) external view returns (bool);
+
+    function getApproved(
+        uint256 tokenId
+    ) external view returns (address operator);
+
+    function isApprovedForAll(
+        address owner,
+        address operator
+    ) external view returns (bool);
 }
+
 interface IERC721Metadata is IERC721 {
     function name() external view returns (string memory);
+
     function symbol() external view returns (string memory);
+
     function tokenURI(uint256 tokenId) external view returns (string memory);
 }
-abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Errors {
+
+abstract contract ERC721 is
+    Context,
+    ERC165,
+    IERC721,
+    IERC721Metadata,
+    IERC721Errors
+{
     using Strings for uint256;
     // Token name
     string private _name;
@@ -474,54 +677,84 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
     mapping(uint256 tokenId => address) private _owners;
     mapping(address owner => uint256) private _balances;
     mapping(uint256 tokenId => address) private _tokenApprovals;
-    mapping(address owner => mapping(address operator => bool)) private _operatorApprovals;
+    mapping(address owner => mapping(address operator => bool))
+        private _operatorApprovals;
+
     constructor(string memory name_, string memory symbol_) {
         _name = name_;
         _symbol = symbol_;
     }
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
+
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override(ERC165, IERC165) returns (bool) {
         return
             interfaceId == type(IERC721).interfaceId ||
             interfaceId == type(IERC721Metadata).interfaceId ||
             super.supportsInterface(interfaceId);
     }
+
     function balanceOf(address owner) public view virtual returns (uint256) {
         if (owner == address(0)) {
             revert ERC721InvalidOwner(address(0));
         }
         return _balances[owner];
     }
+
     function ownerOf(uint256 tokenId) public view virtual returns (address) {
         return _requireOwned(tokenId);
     }
+
     function name() public view virtual returns (string memory) {
         return _name;
     }
+
     function symbol() public view virtual returns (string memory) {
         return _symbol;
     }
-    function tokenURI(uint256 tokenId) public view virtual returns (string memory) {
+
+    function tokenURI(
+        uint256 tokenId
+    ) public view virtual returns (string memory) {
         _requireOwned(tokenId);
         string memory baseURI = _baseURI();
-        return bytes(baseURI).length > 0 ? string.concat(baseURI, tokenId.toString()) : "";
+        return
+            bytes(baseURI).length > 0
+                ? string.concat(baseURI, tokenId.toString())
+                : "";
     }
+
     function _baseURI() internal view virtual returns (string memory) {
         return "";
     }
+
     function approve(address to, uint256 tokenId) public virtual {
         _approve(to, tokenId, _msgSender());
     }
-    function getApproved(uint256 tokenId) public view virtual returns (address) {
+
+    function getApproved(
+        uint256 tokenId
+    ) public view virtual returns (address) {
         _requireOwned(tokenId);
         return _getApproved(tokenId);
     }
+
     function setApprovalForAll(address operator, bool approved) public virtual {
         _setApprovalForAll(_msgSender(), operator, approved);
     }
-    function isApprovedForAll(address owner, address operator) public view virtual returns (bool) {
+
+    function isApprovedForAll(
+        address owner,
+        address operator
+    ) public view virtual returns (bool) {
         return _operatorApprovals[owner][operator];
     }
-    function transferFrom(address from, address to, uint256 tokenId) public virtual {
+
+    function transferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public virtual {
         if (to == address(0)) {
             revert ERC721InvalidReceiver(address(0));
         }
@@ -530,25 +763,52 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
             revert ERC721IncorrectOwner(from, tokenId, previousOwner);
         }
     }
-    function safeTransferFrom(address from, address to, uint256 tokenId) public {
+
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public {
         safeTransferFrom(from, to, tokenId, "");
     }
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data) public virtual {
+
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId,
+        bytes memory data
+    ) public virtual {
         transferFrom(from, to, tokenId);
         _checkOnERC721Received(from, to, tokenId, data);
     }
+
     function _ownerOf(uint256 tokenId) internal view virtual returns (address) {
         return _owners[tokenId];
     }
-    function _getApproved(uint256 tokenId) internal view virtual returns (address) {
+
+    function _getApproved(
+        uint256 tokenId
+    ) internal view virtual returns (address) {
         return _tokenApprovals[tokenId];
     }
-    function _isAuthorized(address owner, address spender, uint256 tokenId) internal view virtual returns (bool) {
+
+    function _isAuthorized(
+        address owner,
+        address spender,
+        uint256 tokenId
+    ) internal view virtual returns (bool) {
         return
             spender != address(0) &&
-            (owner == spender || isApprovedForAll(owner, spender) || _getApproved(tokenId) == spender);
+            (owner == spender ||
+                isApprovedForAll(owner, spender) ||
+                _getApproved(tokenId) == spender);
     }
-    function _checkAuthorized(address owner, address spender, uint256 tokenId) internal view virtual {
+
+    function _checkAuthorized(
+        address owner,
+        address spender,
+        uint256 tokenId
+    ) internal view virtual {
         if (!_isAuthorized(owner, spender, tokenId)) {
             if (owner == address(0)) {
                 revert ERC721NonexistentToken(tokenId);
@@ -557,12 +817,18 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
             }
         }
     }
+
     function _increaseBalance(address account, uint128 value) internal virtual {
         unchecked {
             _balances[account] += value;
         }
     }
-    function _update(address to, uint256 tokenId, address auth) internal virtual returns (address) {
+
+    function _update(
+        address to,
+        uint256 tokenId,
+        address auth
+    ) internal virtual returns (address) {
         address from = _ownerOf(tokenId);
         // Perform (optional) operator check
         if (auth != address(0)) {
@@ -586,6 +852,7 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
         emit Transfer(from, to, tokenId);
         return from;
     }
+
     function _mint(address to, uint256 tokenId) internal {
         if (to == address(0)) {
             revert ERC721InvalidReceiver(address(0));
@@ -595,19 +862,27 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
             revert ERC721InvalidSender(address(0));
         }
     }
+
     function _safeMint(address to, uint256 tokenId) internal {
         _safeMint(to, tokenId, "");
     }
-    function _safeMint(address to, uint256 tokenId, bytes memory data) internal virtual {
+
+    function _safeMint(
+        address to,
+        uint256 tokenId,
+        bytes memory data
+    ) internal virtual {
         _mint(to, tokenId);
         _checkOnERC721Received(address(0), to, tokenId, data);
     }
+
     function _burn(uint256 tokenId) internal {
         address previousOwner = _update(address(0), tokenId, address(0));
         if (previousOwner == address(0)) {
             revert ERC721NonexistentToken(tokenId);
         }
     }
+
     function _transfer(address from, address to, uint256 tokenId) internal {
         if (to == address(0)) {
             revert ERC721InvalidReceiver(address(0));
@@ -619,23 +894,41 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
             revert ERC721IncorrectOwner(from, tokenId, previousOwner);
         }
     }
+
     function _safeTransfer(address from, address to, uint256 tokenId) internal {
         _safeTransfer(from, to, tokenId, "");
     }
-    function _safeTransfer(address from, address to, uint256 tokenId, bytes memory data) internal virtual {
+
+    function _safeTransfer(
+        address from,
+        address to,
+        uint256 tokenId,
+        bytes memory data
+    ) internal virtual {
         _transfer(from, to, tokenId);
         _checkOnERC721Received(from, to, tokenId, data);
     }
+
     function _approve(address to, uint256 tokenId, address auth) internal {
         _approve(to, tokenId, auth, true);
     }
-    function _approve(address to, uint256 tokenId, address auth, bool emitEvent) internal virtual {
+
+    function _approve(
+        address to,
+        uint256 tokenId,
+        address auth,
+        bool emitEvent
+    ) internal virtual {
         // Avoid reading the owner unless necessary
         if (emitEvent || auth != address(0)) {
             address owner = _requireOwned(tokenId);
 
             // We do not use _isAuthorized because single-token approvals should not be able to call approve
-            if (auth != address(0) && owner != auth && !isApprovedForAll(owner, auth)) {
+            if (
+                auth != address(0) &&
+                owner != auth &&
+                !isApprovedForAll(owner, auth)
+            ) {
                 revert ERC721InvalidApprover(auth);
             }
 
@@ -646,13 +939,19 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
 
         _tokenApprovals[tokenId] = to;
     }
-    function _setApprovalForAll(address owner, address operator, bool approved) internal virtual {
+
+    function _setApprovalForAll(
+        address owner,
+        address operator,
+        bool approved
+    ) internal virtual {
         if (operator == address(0)) {
             revert ERC721InvalidOperator(operator);
         }
         _operatorApprovals[owner][operator] = approved;
         emit ApprovalForAll(owner, operator, approved);
     }
+
     function _requireOwned(uint256 tokenId) internal view returns (address) {
         address owner = _ownerOf(tokenId);
         if (owner == address(0)) {
@@ -660,9 +959,22 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
         }
         return owner;
     }
-    function _checkOnERC721Received(address from, address to, uint256 tokenId, bytes memory data) private {
+
+    function _checkOnERC721Received(
+        address from,
+        address to,
+        uint256 tokenId,
+        bytes memory data
+    ) private {
         if (to.code.length > 0) {
-            try IERC721Receiver(to).onERC721Received(_msgSender(), from, tokenId, data) returns (bytes4 retval) {
+            try
+                IERC721Receiver(to).onERC721Received(
+                    _msgSender(),
+                    from,
+                    tokenId,
+                    data
+                )
+            returns (bytes4 retval) {
                 if (retval != IERC721Receiver.onERC721Received.selector) {
                     revert ERC721InvalidReceiver(to);
                 }
@@ -679,6 +991,7 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
         }
     }
 }
+
 interface IERC4906 is IERC165, IERC721 {
     event MetadataUpdate(uint256 _tokenId);
     event BatchMetadataUpdate(uint256 _fromTokenId, uint256 _toTokenId);
@@ -691,10 +1004,18 @@ abstract contract ERC721URIStorage is IERC4906, ERC721 {
     bytes4 private constant ERC4906_INTERFACE_ID = bytes4(0x49064906);
     // Optional mapping for token URIs
     mapping(uint256 tokenId => string) private _tokenURIs;
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, IERC165) returns (bool) {
-        return interfaceId == ERC4906_INTERFACE_ID || super.supportsInterface(interfaceId);
+
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override(ERC721, IERC165) returns (bool) {
+        return
+            interfaceId == ERC4906_INTERFACE_ID ||
+            super.supportsInterface(interfaceId);
     }
-    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+
+    function tokenURI(
+        uint256 tokenId
+    ) public view virtual override returns (string memory) {
         _requireOwned(tokenId);
 
         string memory _tokenURI = _tokenURIs[tokenId];
@@ -711,11 +1032,16 @@ abstract contract ERC721URIStorage is IERC4906, ERC721 {
 
         return super.tokenURI(tokenId);
     }
-    function _setTokenURI(uint256 tokenId, string memory _tokenURI) internal virtual {
+
+    function _setTokenURI(
+        uint256 tokenId,
+        string memory _tokenURI
+    ) internal virtual {
         _tokenURIs[tokenId] = _tokenURI;
         emit MetadataUpdate(tokenId);
     }
 }
+
 library ECDSA {
     enum RecoverError {
         NoError,
@@ -726,7 +1052,11 @@ library ECDSA {
     error ECDSAInvalidSignature();
     error ECDSAInvalidSignatureLength(uint256 length);
     error ECDSAInvalidSignatureS(bytes32 s);
-    function tryRecover(bytes32 hash, bytes memory signature) internal pure returns (address, RecoverError, bytes32) {
+
+    function tryRecover(
+        bytes32 hash,
+        bytes memory signature
+    ) internal pure returns (address, RecoverError, bytes32) {
         if (signature.length == 65) {
             bytes32 r;
             bytes32 s;
@@ -738,34 +1068,66 @@ library ECDSA {
             }
             return tryRecover(hash, v, r, s);
         } else {
-            return (address(0), RecoverError.InvalidSignatureLength, bytes32(signature.length));
+            return (
+                address(0),
+                RecoverError.InvalidSignatureLength,
+                bytes32(signature.length)
+            );
         }
     }
-    function recover(bytes32 hash, bytes memory signature) internal pure returns (address) {
-        (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(hash, signature);
+
+    function recover(
+        bytes32 hash,
+        bytes memory signature
+    ) internal pure returns (address) {
+        (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(
+            hash,
+            signature
+        );
         _throwError(error, errorArg);
         return recovered;
     }
-    function tryRecover(bytes32 hash, bytes32 r, bytes32 vs) internal pure returns (address, RecoverError, bytes32) {
+
+    function tryRecover(
+        bytes32 hash,
+        bytes32 r,
+        bytes32 vs
+    ) internal pure returns (address, RecoverError, bytes32) {
         unchecked {
-            bytes32 s = vs & bytes32(0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff);
+            bytes32 s = vs &
+                bytes32(
+                    0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+                );
             // We do not check for an overflow here since the shift operation results in 0 or 1.
             uint8 v = uint8((uint256(vs) >> 255) + 27);
             return tryRecover(hash, v, r, s);
         }
     }
-    function recover(bytes32 hash, bytes32 r, bytes32 vs) internal pure returns (address) {
-        (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(hash, r, vs);
+
+    function recover(
+        bytes32 hash,
+        bytes32 r,
+        bytes32 vs
+    ) internal pure returns (address) {
+        (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(
+            hash,
+            r,
+            vs
+        );
         _throwError(error, errorArg);
         return recovered;
     }
+
     function tryRecover(
         bytes32 hash,
         uint8 v,
         bytes32 r,
         bytes32 s
     ) internal pure returns (address, RecoverError, bytes32) {
-        if (uint256(s) > 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0) {
+        if (
+            uint256(s) >
+            0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0
+        ) {
             return (address(0), RecoverError.InvalidSignatureS, s);
         }
 
@@ -777,11 +1139,23 @@ library ECDSA {
 
         return (signer, RecoverError.NoError, bytes32(0));
     }
-    function recover(bytes32 hash, uint8 v, bytes32 r, bytes32 s) internal pure returns (address) {
-        (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(hash, v, r, s);
+
+    function recover(
+        bytes32 hash,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) internal pure returns (address) {
+        (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(
+            hash,
+            v,
+            r,
+            s
+        );
         _throwError(error, errorArg);
         return recovered;
     }
+
     function _throwError(RecoverError error, bytes32 errorArg) private pure {
         if (error == RecoverError.NoError) {
             return; // no error: do nothing
@@ -794,8 +1168,10 @@ library ECDSA {
         }
     }
 }
+
 interface IERC5267 {
     event EIP712DomainChanged();
+
     function eip712Domain()
         external
         view
@@ -809,6 +1185,7 @@ interface IERC5267 {
             uint256[] memory extensions
         );
 }
+
 library StorageSlot {
     struct AddressSlot {
         address value;
@@ -833,68 +1210,98 @@ library StorageSlot {
     struct BytesSlot {
         bytes value;
     }
-    function getAddressSlot(bytes32 slot) internal pure returns (AddressSlot storage r) {
+
+    function getAddressSlot(
+        bytes32 slot
+    ) internal pure returns (AddressSlot storage r) {
         /// @solidity memory-safe-assembly
         assembly {
             r.slot := slot
         }
     }
-    function getBooleanSlot(bytes32 slot) internal pure returns (BooleanSlot storage r) {
+
+    function getBooleanSlot(
+        bytes32 slot
+    ) internal pure returns (BooleanSlot storage r) {
         /// @solidity memory-safe-assembly
         assembly {
             r.slot := slot
         }
     }
-    function getBytes32Slot(bytes32 slot) internal pure returns (Bytes32Slot storage r) {
+
+    function getBytes32Slot(
+        bytes32 slot
+    ) internal pure returns (Bytes32Slot storage r) {
         /// @solidity memory-safe-assembly
         assembly {
             r.slot := slot
         }
     }
-    function getUint256Slot(bytes32 slot) internal pure returns (Uint256Slot storage r) {
+
+    function getUint256Slot(
+        bytes32 slot
+    ) internal pure returns (Uint256Slot storage r) {
         /// @solidity memory-safe-assembly
         assembly {
             r.slot := slot
         }
     }
-    function getStringSlot(bytes32 slot) internal pure returns (StringSlot storage r) {
+
+    function getStringSlot(
+        bytes32 slot
+    ) internal pure returns (StringSlot storage r) {
         /// @solidity memory-safe-assembly
         assembly {
             r.slot := slot
         }
     }
-    function getStringSlot(string storage store) internal pure returns (StringSlot storage r) {
+
+    function getStringSlot(
+        string storage store
+    ) internal pure returns (StringSlot storage r) {
         /// @solidity memory-safe-assembly
         assembly {
             r.slot := store.slot
         }
     }
-    function getBytesSlot(bytes32 slot) internal pure returns (BytesSlot storage r) {
+
+    function getBytesSlot(
+        bytes32 slot
+    ) internal pure returns (BytesSlot storage r) {
         /// @solidity memory-safe-assembly
         assembly {
             r.slot := slot
         }
     }
-    function getBytesSlot(bytes storage store) internal pure returns (BytesSlot storage r) {
+
+    function getBytesSlot(
+        bytes storage store
+    ) internal pure returns (BytesSlot storage r) {
         /// @solidity memory-safe-assembly
         assembly {
             r.slot := store.slot
         }
     }
-}      
-type ShortString is bytes32;                                                 
+}
+type ShortString is bytes32;
+
 library ShortStrings {
     // Used as an identifier for strings longer than 31 bytes.
-    bytes32 private constant FALLBACK_SENTINEL = 0x00000000000000000000000000000000000000000000000000000000000000FF;
+    bytes32 private constant FALLBACK_SENTINEL =
+        0x00000000000000000000000000000000000000000000000000000000000000FF;
     error StringTooLong(string str);
     error InvalidShortString();
-    function toShortString(string memory str) internal pure returns (ShortString) {
+
+    function toShortString(
+        string memory str
+    ) internal pure returns (ShortString) {
         bytes memory bstr = bytes(str);
         if (bstr.length > 31) {
             revert StringTooLong(str);
         }
         return ShortString.wrap(bytes32(uint256(bytes32(bstr)) | bstr.length));
     }
+
     function toString(ShortString sstr) internal pure returns (string memory) {
         uint256 len = byteLength(sstr);
         // using `new string(len)` would work locally but is not memory safe.
@@ -906,6 +1313,7 @@ library ShortStrings {
         }
         return str;
     }
+
     function byteLength(ShortString sstr) internal pure returns (uint256) {
         uint256 result = uint256(ShortString.unwrap(sstr)) & 0xFF;
         if (result > 31) {
@@ -913,7 +1321,11 @@ library ShortStrings {
         }
         return result;
     }
-    function toShortStringWithFallback(string memory value, string storage store) internal returns (ShortString) {
+
+    function toShortStringWithFallback(
+        string memory value,
+        string storage store
+    ) internal returns (ShortString) {
         if (bytes(value).length < 32) {
             return toShortString(value);
         } else {
@@ -921,14 +1333,22 @@ library ShortStrings {
             return ShortString.wrap(FALLBACK_SENTINEL);
         }
     }
-    function toStringWithFallback(ShortString value, string storage store) internal pure returns (string memory) {
+
+    function toStringWithFallback(
+        ShortString value,
+        string storage store
+    ) internal pure returns (string memory) {
         if (ShortString.unwrap(value) != FALLBACK_SENTINEL) {
             return toString(value);
         } else {
             return store;
         }
     }
-    function byteLengthWithFallback(ShortString value, string storage store) internal view returns (uint256) {
+
+    function byteLengthWithFallback(
+        ShortString value,
+        string storage store
+    ) internal view returns (uint256) {
         if (ShortString.unwrap(value) != FALLBACK_SENTINEL) {
             return byteLength(value);
         } else {
@@ -936,8 +1356,11 @@ library ShortStrings {
         }
     }
 }
+
 library MessageHashUtils {
-    function toEthSignedMessageHash(bytes32 messageHash) internal pure returns (bytes32 digest) {
+    function toEthSignedMessageHash(
+        bytes32 messageHash
+    ) internal pure returns (bytes32 digest) {
         /// @solidity memory-safe-assembly
         assembly {
             mstore(0x00, "\x19Ethereum Signed Message:\n32") // 32 is the bytes-length of messageHash
@@ -945,14 +1368,31 @@ library MessageHashUtils {
             digest := keccak256(0x00, 0x3c) // 0x3c is the length of the prefix (0x1c) + messageHash (0x20)
         }
     }
-    function toEthSignedMessageHash(bytes memory message) internal pure returns (bytes32) {
+
+    function toEthSignedMessageHash(
+        bytes memory message
+    ) internal pure returns (bytes32) {
         return
-            keccak256(bytes.concat("\x19Ethereum Signed Message:\n", bytes(Strings.toString(message.length)), message));
+            keccak256(
+                bytes.concat(
+                    "\x19Ethereum Signed Message:\n",
+                    bytes(Strings.toString(message.length)),
+                    message
+                )
+            );
     }
-    function toDataWithIntendedValidatorHash(address validator, bytes memory data) internal pure returns (bytes32) {
+
+    function toDataWithIntendedValidatorHash(
+        address validator,
+        bytes memory data
+    ) internal pure returns (bytes32) {
         return keccak256(abi.encodePacked(hex"19_00", validator, data));
     }
-    function toTypedDataHash(bytes32 domainSeparator, bytes32 structHash) internal pure returns (bytes32 digest) {
+
+    function toTypedDataHash(
+        bytes32 domainSeparator,
+        bytes32 structHash
+    ) internal pure returns (bytes32 digest) {
         /// @solidity memory-safe-assembly
         assembly {
             let ptr := mload(0x40)
@@ -963,10 +1403,13 @@ library MessageHashUtils {
         }
     }
 }
+
 abstract contract EIP712 is IERC5267 {
     using ShortStrings for *;
     bytes32 private constant TYPE_HASH =
-        keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)");
+        keccak256(
+            "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
+        );
     bytes32 private immutable _cachedDomainSeparator;
     uint256 private immutable _cachedChainId;
     address private immutable _cachedThis;
@@ -976,6 +1419,7 @@ abstract contract EIP712 is IERC5267 {
     ShortString private immutable _version;
     string private _nameFallback;
     string private _versionFallback;
+
     constructor(string memory name, string memory version) {
         _name = name.toShortStringWithFallback(_nameFallback);
         _version = version.toShortStringWithFallback(_versionFallback);
@@ -986,6 +1430,7 @@ abstract contract EIP712 is IERC5267 {
         _cachedDomainSeparator = _buildDomainSeparator();
         _cachedThis = address(this);
     }
+
     function _domainSeparatorV4() internal view returns (bytes32) {
         if (address(this) == _cachedThis && block.chainid == _cachedChainId) {
             return _cachedDomainSeparator;
@@ -995,11 +1440,25 @@ abstract contract EIP712 is IERC5267 {
     }
 
     function _buildDomainSeparator() private view returns (bytes32) {
-        return keccak256(abi.encode(TYPE_HASH, _hashedName, _hashedVersion, block.chainid, address(this)));
+        return
+            keccak256(
+                abi.encode(
+                    TYPE_HASH,
+                    _hashedName,
+                    _hashedVersion,
+                    block.chainid,
+                    address(this)
+                )
+            );
     }
-    function _hashTypedDataV4(bytes32 structHash) internal view virtual returns (bytes32) {
-        return MessageHashUtils.toTypedDataHash(_domainSeparatorV4(), structHash);
+
+    function _hashTypedDataV4(
+        bytes32 structHash
+    ) internal view virtual returns (bytes32) {
+        return
+            MessageHashUtils.toTypedDataHash(_domainSeparatorV4(), structHash);
     }
+
     function eip712Domain()
         public
         view
@@ -1024,145 +1483,140 @@ abstract contract EIP712 is IERC5267 {
             new uint256[](0)
         );
     }
+
     function _EIP712Name() internal view returns (string memory) {
         return _name.toStringWithFallback(_nameFallback);
     }
+
     function _EIP712Version() internal view returns (string memory) {
         return _version.toStringWithFallback(_versionFallback);
     }
 }
 
-contract LazyNFT is ERC721URIStorage, EIP712, AccessControl {
-  bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-  string private constant SIGNING_DOMAIN = "LazyNFT-Voucher";
-  string private constant SIGNATURE_VERSION = "1";
+contract Quantum is ERC721URIStorage, EIP712, AccessControl {
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    string private constant SIGNING_DOMAIN = "Quantum-Voucher";
+    string private constant SIGNATURE_VERSION = "1";
 
-  mapping (address => uint256) pendingWithdrawals;
+    mapping(address => uint256) pendingWithdrawals;
 
-  constructor(address payable minter)
-    ERC721("LazyNFT", "LAZ") 
-    EIP712(SIGNING_DOMAIN, SIGNATURE_VERSION) {
-      _grantRole(MINTER_ROLE, minter);
+    constructor(
+        address payable minter
+    ) ERC721("QUANTUM", "QM") EIP712(SIGNING_DOMAIN, SIGNATURE_VERSION) {
+        _grantRole(MINTER_ROLE, minter);
     }
 
-  /// @notice Represents an un-minted NFT, which has not yet been recorded into the blockchain. A signed voucher can be redeemed for a real NFT using the redeem function.
-  struct NFTVoucher {
-    /// @notice The id of the token to be redeemed. Must be unique - if another token with this ID already exists, the redeem function will revert.
-    uint256 tokenId;
-
-    /// @notice The minimum price (in wei) that the NFT creator is willing to accept for the initial sale of this NFT.
-    uint256 minPrice;
-
-    /// @notice The metadata URI to associate with this token.
-    string uri;
-
-    /// @notice the EIP-712 signature of all other fields in the NFTVoucher struct. For a voucher to be valid, it must be signed by an account with the MINTER_ROLE.
-    bytes signature;
-  }
-
-
-  /// @notice Redeems an NFTVoucher for an actual NFT, creating it in the process.
-  /// @param redeemer The address of the account which will receive the NFT upon success.
-  /// @param voucher A signed NFTVoucher that describes the NFT to be redeemed.
-  function redeem(address redeemer, NFTVoucher calldata voucher) public payable returns (uint256) {
-    // make sure signature is valid and get the address of the signer
-    address signer = _verify(voucher);
-
-    // make sure that the signer is authorized to mint NFTs
-    require(hasRole(MINTER_ROLE, signer), "Signature invalid or unauthorized");
-
-    // make sure that the redeemer is paying enough to cover the buyer's cost
-    require(msg.value >= voucher.minPrice, "Insufficient funds to redeem");
-
-    // first assign the token to the signer, to establish provenance on-chain
-    _mint(signer, voucher.tokenId);
-    _setTokenURI(voucher.tokenId, voucher.uri);
-    
-    // transfer the token to the redeemer
-    _transfer(signer, redeemer, voucher.tokenId);
-
-    // record payment to signer's withdrawal balance
-    pendingWithdrawals[signer] += msg.value;
-
-    return voucher.tokenId;
-  }
-
-  /// @notice Transfers all pending withdrawal balance to the caller. Reverts if the caller is not an authorized minter.
-  function withdraw() public {
-    require(hasRole(MINTER_ROLE, msg.sender), "Only authorized minters can withdraw");
-    
-    // IMPORTANT: casting msg.sender to a payable address is only safe if ALL members of the minter role are payable addresses.
-    address payable receiver = payable(msg.sender);
-
-    uint amount = pendingWithdrawals[receiver];
-    // zero account before transfer to prevent re-entrancy attack
-    pendingWithdrawals[receiver] = 0;
-    receiver.transfer(amount);
-  }
-
-  /// @notice Retuns the amount of Ether available to the caller to withdraw.
-  function availableToWithdraw() public view returns (uint256) {
-    return pendingWithdrawals[msg.sender];
-  }
-
-  /// @notice Returns a hash of the given NFTVoucher, prepared using EIP712 typed data hashing rules.
-  /// @param voucher An NFTVoucher to hash.
-  function _hash(NFTVoucher calldata voucher) internal view returns (bytes32) {
-    return _hashTypedDataV4(keccak256(abi.encode(
-      keccak256("NFTVoucher(uint256 tokenId,uint256 minPrice,string uri)"),
-      voucher.tokenId,
-      voucher.minPrice,
-      keccak256(bytes(voucher.uri))
-    )));
-  }
-
-  /// @notice Returns the chain id of the current blockchain.
-  /// @dev This is used to workaround an issue with ganache returning different values from the on-chain chainid() function and
-  ///  the eth_chainId RPC method. See https://github.com/protocol/nft-website/issues/121 for context.
-  function getChainID() external view returns (uint256) {
-    uint256 id;
-    assembly {
-        id := chainid()
+    // Represents an un-minted NFT, which has not yet been recorded into the blockchain. A signed voucher can be redeemed for a real NFT using the redeem function.
+    struct NFTVoucher {
+        // The id of the token to be redeemed. Must be unique - if another token with this ID already exists, the redeem function will revert.
+        uint256 tokenId;
+        // The minimum price (in wei) that the NFT creator is willing to accept for the initial sale of this NFT.
+        uint256 minPrice;
+        // The metadata URI to associate with this token.
+        string uri;
+        // the EIP-712 signature of all other fields in the NFTVoucher struct. For a voucher to be valid, it must be signed by an account with the MINTER_ROLE.
+        bytes signature;
     }
-    return id;
-  }
 
-  /// @notice Verifies the signature for a given NFTVoucher, returning the address of the signer.
-  /// @dev Will revert if the signature is invalid. Does not verify that the signer is authorized to mint NFTs.
-  /// @param voucher An NFTVoucher describing an unminted NFT.
-  function _verify(NFTVoucher calldata voucher) public  view returns (address) {
-    bytes32 digest = _hash(voucher);
-    return ECDSA.recover(digest, voucher.signature);
-  }
+    // Redeems an NFTVoucher for an actual NFT, creating it in the process.
+    // redeemer The address of the account which will receive the NFT upon success.
+    // voucher A signed NFTVoucher that describes the NFT to be redeemed.
+    function redeem(
+        address redeemer,
+        NFTVoucher calldata voucher
+    ) public payable returns (uint256) {
+        // make sure signature is valid and get the address of the signer
+        address signer = _verify(voucher);
+        // make sure that the signer is authorized to mint NFTs
+        require(
+            hasRole(MINTER_ROLE, signer),
+            "Signature invalid or unauthorized"
+        );
+        // make sure that the redeemer is paying enough to cover the buyer's cost
+        require(msg.value >= voucher.minPrice, "Insufficient funds to redeem");
+        // first assign the token to the signer, to establish provenance on-chain
+        _mint(signer, voucher.tokenId);
+        _setTokenURI(voucher.tokenId, voucher.uri);
+        // transfer the token to the redeemer
+        _transfer(signer, redeemer, voucher.tokenId);
+        // record payment to signer's withdrawal balance
+        pendingWithdrawals[signer] += msg.value;
+        return voucher.tokenId;
+    }
 
-  function supportsInterface(bytes4 interfaceId) public view virtual override (AccessControl, ERC721URIStorage) returns (bool) {
-    return ERC721.supportsInterface(interfaceId) || AccessControl.supportsInterface(interfaceId);
-  }
-  struct list {
-    uint256 price;
-    address seller;
-    bool listed;
-  }
-  mapping(uint256 => list) listed;
+    // Transfers all pending withdrawal balance to the caller. Reverts if the caller is not an authorized minter.
+    function withdraw() public {
+        require(
+            hasRole(MINTER_ROLE, msg.sender),
+            "Only authorized minters can withdraw"
+        );
 
-  function listNFT(uint256 tokenId,uint256 price) public returns (bool){
-    require(ownerOf(tokenId) == msg.sender,"You are not owner of this tokenId");
-    transferFrom(msg.sender,address(this),tokenId);
-    listed[tokenId] = list(price,msg.sender,true);
-    return true;
-  }
-  function buyNFT (uint256 tokenId) public payable returns (bool){
-    require(listed[tokenId].listed == true,"NFT not available to buy" );
-    require(msg.value == listed[tokenId].price,"invalid price" );
-    require(msg.sender != listed[tokenId].seller,"seller cannot buy" );
-    safeTransferFrom(address(this),msg.sender,tokenId);
-    listed[tokenId].listed = false;
-    return true;
-  }
-  function deListNFT(uint256 tokenId) public returns (bool){
-    require(msg.sender == listed[tokenId].seller,"invalid seller" );
-    safeTransferFrom(address(this),msg.sender,tokenId);
-    listed[tokenId].listed = false;
-    return true;
-  }
+        // IMPORTANT: casting msg.sender to a payable address is only safe if ALL members of the minter role are payable addresses.
+        address payable receiver = payable(msg.sender);
+
+        uint amount = pendingWithdrawals[receiver];
+        // zero account before transfer to prevent re-entrancy attack
+        pendingWithdrawals[receiver] = 0;
+        receiver.transfer(amount);
+    }
+
+    // Retuns the amount of Ether available to the caller to withdraw.
+    function availableToWithdraw() public view returns (uint256) {
+        return pendingWithdrawals[msg.sender];
+    }
+
+    // Returns a hash of the given NFTVoucher, prepared using EIP712 typed data hashing rules.
+    // voucher An NFTVoucher to hash.
+    function _hash(
+        NFTVoucher calldata voucher
+    ) internal view returns (bytes32) {
+        return
+            _hashTypedDataV4(
+                keccak256(
+                    abi.encode(
+                        keccak256(
+                            "NFTVoucher(uint256 tokenId,uint256 minPrice,string uri)"
+                        ),
+                        voucher.tokenId,
+                        voucher.minPrice,
+                        keccak256(bytes(voucher.uri))
+                    )
+                )
+            );
+    }
+
+    // Returns the chain id of the current blockchain.
+    // This is used to workaround an issue with ganache returning different values from the on-chain chainid() function and
+    // the eth_chainId RPC method. See https://github.com/protocol/nft-website/issues/121 for context.
+    function getChainID() external view returns (uint256) {
+        uint256 id;
+        assembly {
+            id := chainid()
+        }
+        return id;
+    }
+
+    // Verifies the signature for a given NFTVoucher, returning the address of the signer.
+    // Will revert if the signature is invalid. Does not verify that the signer is authorized to mint NFTs.
+    // voucher An NFTVoucher describing an unminted NFT.
+    function _verify(
+        NFTVoucher calldata voucher
+    ) public view returns (address) {
+        bytes32 digest = _hash(voucher);
+        return ECDSA.recover(digest, voucher.signature);
+    }
+
+    function supportsInterface(
+        bytes4 interfaceId
+    )
+        public
+        view
+        virtual
+        override(AccessControl, ERC721URIStorage)
+        returns (bool)
+    {
+        return
+            ERC721.supportsInterface(interfaceId) ||
+            AccessControl.supportsInterface(interfaceId);
+    }
 }
