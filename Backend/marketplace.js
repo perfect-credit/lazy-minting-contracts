@@ -4,6 +4,7 @@ const contractAbi = [{ "inputs": [{ "internalType": "address", "name": "_Quantum
 const contractAddress = '0x2aa80687Ef2d34d50b0FC8402A234aC41Ff8bdBf';
 const nftMarketplace = new web3.eth.Contract(contractAbi, contractAddress);
 
+// post method
 const listNFTForSale = async (tokenId, price) => {
     try {
         const result = await nftMarketplace.methods.listNFTForSale(tokenId, price).send({ from: 'your_wallet_address' });
@@ -13,6 +14,7 @@ const listNFTForSale = async (tokenId, price) => {
     }
 };
 
+//post method
 const unlistNFT = async (tokenId) => {
     try {
         const result = await nftMarketplace.methods.unlistNFT(tokenId).send({ from: 'your_wallet_address' });
@@ -22,6 +24,7 @@ const unlistNFT = async (tokenId) => {
     }
 };
 
+//post method
 const buyNFT = async (tokenId, value) => {
     try {
         const result = await nftMarketplace.methods.buyNFT(tokenId).send({ from: 'your_wallet_address', value });
@@ -31,6 +34,7 @@ const buyNFT = async (tokenId, value) => {
     }
 };
 
+// get method
 const isNFTListed = async (tokenId) => {
     try {
         const result = await nftMarketplace.methods.isNFTListed(tokenId).call();
@@ -40,6 +44,7 @@ const isNFTListed = async (tokenId) => {
     }
 };
 
+//get method
 const priceOfNFT = async (tokenId) => {
     try {
         const result = await nftMarketplace.methods.priceOfNFT(tokenId).call();
@@ -49,6 +54,7 @@ const priceOfNFT = async (tokenId) => {
     }
 };
 
+//get method
 const sellerOfNFT = async (tokenId) => {
     try {
         const result = await nftMarketplace.methods.sellerOfNFT(tokenId).call();
