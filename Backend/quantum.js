@@ -10,7 +10,7 @@ const contractAddress = '0x67337e3eE9Ac0988Ba48E444b52aC5eF6639E6d4';
 // Instantiate the contract
 const contract = new web3.eth.Contract(contractAbi, contractAddress);
 
-// Function to redeem NFT
+// post method
 async function redeemNFT(redeemer, voucher) {
     try {
         // Convert voucher data to bytes32
@@ -36,7 +36,7 @@ async function redeemNFT(redeemer, voucher) {
     }
 }
 
-// Function to withdraw funds
+// post method
 async function withdrawFunds() {
     try {
         // Call the withdraw function on the contract
